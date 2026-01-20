@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "ethers": "^6.11.1",
+    "pinata": "^2.5.3"
+  },
+  "type": "module"
+}
