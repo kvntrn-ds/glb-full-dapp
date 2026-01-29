@@ -1,0 +1,17 @@
+{
+  "name": "glb-to-nft",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.28.1",
+  "devDependencies": {
+    "@gltf-transform/cli": "^4.3.0",
+    "execa": "^9.6.1"
+  }
+}
