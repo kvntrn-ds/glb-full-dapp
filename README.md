@@ -2,13 +2,26 @@
 
 Convert 3D GLB models into NFTs on the blockchain. Upload to IPFS via Pinata, create metadata, and mint to an ERC721 contract on Base Sepolia testnet.
 
+**Two ways to use:**
+- 🖥️ **CLI Scripts** - Command-line tools for developers
+- 🌐 **Web dApp** - User-friendly React interface with 3D preview
+
 ## Features
 
+### CLI Tools
 ✅ Upload 3D GLB models to Pinata IPFS  
 ✅ Automatically generate NFT metadata JSON  
 ✅ Deploy ERC721 smart contract  
 ✅ Mint NFTs in one command  
-✅ Full testnet support (Base Sepolia)  
+✅ Full testnet support (Base Sepolia)
+
+### Web dApp (NEW! 🎨)
+✅ Interactive 3D model preview (React Three Fiber)  
+✅ Drag & drop GLB file upload  
+✅ Multi-wallet support (RainbowKit + wagmi)  
+✅ Client-side IPFS upload  
+✅ Real-time transaction tracking  
+✅ Responsive modern UI (Tailwind CSS)  
 
 ## Prerequisites
 
@@ -18,37 +31,72 @@ Convert 3D GLB models into NFTs on the blockchain. Upload to IPFS via Pinata, cr
 - **Pinata account** (free tier available at https://pinata.cloud)
 - **Base Sepolia testnet ETH** (free from faucet: https://www.basescan.org/faucets)
 
-## Installation
+## Quick Start
+
+### 🌐 Use the Web dApp (Easiest)
 
 ```bash
-# Clone the repository
-git clone <your-repo-url>
-cd glb-dapp
+# Navigate to frontend
+cd frontend
 
 # Install dependencies
 npm install
-# or
-pnpm install
+
+# Configure environment
+cp .env.example .env
+# Edit .env with your Pinata JWT, contract address, and WalletConnect ID
+
+# Start development server
+npm run dev
+```
+
+Visit http://localhost:3000 and connect your wallet!
+
+### 🖥️ Use CLI Scripts
+
+```bash
+# In root directory
+npm install
+
+# Configure
+cp .env.example .env
+# Add your private key, contract address, Pinata JWT
+
+# Mint an NFT
+npx tsx mint-nft-complete.ts "./model.glb" "NFT Name" "Description"
 ```
 
 ## Configuration
 
 1. **Create `.env` file** from template:
    ```bash
-   cp .env.example .env
-   ```
+   c🌐 Web dApp (Recommended for Users)
 
-2. **Get Pinata JWT:**
-   - Go to https://pinata.cloud
-   - Create API key with "Pinning" permission
-   - Add `PINATA_JWT` to `.env`
+1. **Connect Wallet** - Click "Connect Wallet" and select MetaMask
+2. **Upload GLB File** - Drag & drop your .glb file
+3. **Preview Model** - Interact with 3D preview (rotate, zoom)
+4. **Add Metadata** - Enter NFT name and description
+5. **Mint NFT** - Click mint and confirm in wallet
+6. **Done!** - View on BaseScan or in your wallet
 
-3. **Setup blockchain:**
-   - Add your private key to `PINATA_PRIVATE_KEY` in `.env`
-   - Ensure you have Base Sepolia testnet ETH (get from faucet)
+See [frontend/README.md](frontend/README.md) for detailed documentation.
 
-4. **Deploy contract:**
-   - Go to https://remix.ethereum.org
+### 🖥️ CLI Scripts (For Developers)
+
+#### Option 1: Complete Workflow (Recommended)
+
+Mint an NFT in one command - uploads GLB, creates metadata, and mints:
+
+```bash
+npx tsx mint-nft-complete.ts "./path/to/model.glb" "NFT Name" "Description"
+```
+
+Example:
+```bash
+npx tsx mint-nft-complete.ts "./lowpoly car.glb" "Dragon NFT" "A majestic 3D dragon"
+```
+
+#   - Go to https://remix.ethereum.org
    - Create new file `GLBToNFT.sol`
    - Copy code from [glb-to-nft.sol](glb-to-nft.sol)
    - Compile (Solidity 0.8.0+)
@@ -70,19 +118,28 @@ Example:
 npx tsx mint-nft-complete.ts "./lowpoly car.glb" "Dragon NFT" "A majestic 3D dragon"
 ```
 
-### Option 2: Step-by-Step
+###Project Structure
 
-**Step 1: Upload GLB and metadata**
-```bash
-npx tsx compress-upload-mint.ts "./path/to/model.glb"
 ```
-This outputs the metadata URL.
-
-**Step 2: Mint with metadata URL**
-```bash
-npx tsx mint.ts "https://gateway.pinata.cloud/ipfs/Qm..."
-```
-
+glb-dapp/
+├── frontend/                     # React Web dApp
+│   ├── src/
+│   │   ├── components/          # UI components (FileUpload, ModelPreview, etc.)
+│   │   ├── hooks/               # Custom React hooks (useIpfsUpload, useMintNFT)
+│   │   ├── lib/                 # wagmi config, Pinata client
+│   │   ├── types/               # TypeScript types
+│   │   └── App.tsx              # Main app component
+│   ├── package.json
+│   ├── vite.config.ts
+│   └── README.md                # Frontend documentation
+├── glb-to-nft.sol               # ERC721 smart contract
+├── mint-nft-complete.ts         # CLI: All-in-one minting
+├── compress-upload-mint.ts      # CLI: Upload GLB and metadata
+├── mint.ts                      # CLI: Mint with metadata URL
+├── deploy.ts                    # Deployment helper
+├── test/                        # Smart contract tests
+├── package.json
+└── README.md                    # This file
 ## File Structure
 
 ```
@@ -107,28 +164,7 @@ The `GLBToNFT` contract is an ERC721 token that stores 3D GLB models as NFTs.
 - `getTotalTokens()` - Get total minted tokens
 - `withdraw()` - Owner can withdraw funds
 
-**Deployment:**
-- Network: Base Sepolia (chain ID: 84532)
-- RPC: https://sepolia.base.org
-- Constructor parameter: Your wallet address (the owner)
-
-## Verify Your NFT
-
-1. **Block Explorer:**
-   - https://sepolia.basescan.org/address/0x{YOUR_CONTRACT_ADDRESS}
-
-2. **MetaMask:**
-   - Open NFTs tab
-   - Click "Import NFT"
-   - Contract: Your deployed address
-   - Token ID: 0 (or your token ID)
-
-3. **IPFS Gateway:**
-   - View metadata: https://gateway.pinata.cloud/ipfs/{CID}
-   - View model: https://gateway.pinata.cloud/ipfs/{CID}
-
-## Environment Variables
-
+### Root `.env` (for CLI scripts)
 ```
 PRIVATE_KEY          # Your wallet's private key
 CONTRACT_ADDRESS     # Deployed ERC721 contract address
@@ -138,6 +174,83 @@ PINATA_JWT           # Pinata API JWT token
 PINATA_GATEWAY       # IPFS gateway URL (optional)
 ```
 
+### Frontend `.env` (for web dApp)
+```
+VITE_PINATA_JWT                # Same Pinata JWT (with VITE_ prefix)
+VITE_CONTRACT_ADDRESS          # Same contract address
+VITE_WALLETCONNECT_PROJECT_ID  # From https://cloud.walletconnect.com
+VITE_PINATA_GATEWAY            # Optional custom gateway
+1. **Block Explorer:**
+   - https://sepolia.basescan.org/address/0x{YOUR_CONTRACT_ADDRESS}
+
+2. **MetaMask:**
+   - Open NFTs tab
+   - Click "Import NFT"
+   - Contract: Your deployed address
+   - Token ID: 0 (or your token ID)
+Tech Stack
+
+### Frontend
+- **React 18** - UI framework
+- **wagmi 2.x** - React hooks for Ethereum
+- **viem** - TypeScript Ethereum library
+- **RainbowKit** - Wallet connection UI
+- **React Three Fiber** - 3D rendering engine
+- **Tailwind CSS** - Utility-first styling
+- **Vite** - Fast build tool
+
+### Backend/CLI
+- **TypeScript** - Type-safe scripting
+- **ethers.js v6** - Blockchain interactions
+- **Pinata SDK** - IPFS uploads
+- **Hardhat** - Smart contract testing
+
+### Smart Contract
+- **Solidity 0.8.24** - Contract language
+- **OpenZeppelin** - ERC721 implementation
+- **Base Sepolia** - L2 testnet
+
+## Deployment
+
+### Deploy Frontend (Vercel)
+```bash
+cd frontend
+npm install -g vercel
+vercel
+```
+
+Or use **Netlify**: drag `frontend/dist/` folder to https://app.netlify.com/drop
+
+### Deploy Contract (Remix)
+1. Go to https://remix.ethereum.org
+2. Copy [glb-to-nft.sol](glb-to-nft.sol)
+3. Compile with Solidity 0.8.0+
+4. Deploy to Base Sepolia with your wallet as owner
+5. Update `.env` files with contract address
+
+## Resources
+
+- [OpenZeppelin ERC721 Docs](https://docs.openzeppelin.com/contracts/4.x/erc721)
+- [Pinata IPFS Docs](https://docs.pinata.cloud)
+- [Base Sepolia Docs](https://docs.base.org)
+- [wagmi Documentation](https://wagmi.sh)
+- [React Three Fiber Docs](https://docs.pmnd.rs/react-three-fiber)
+
+## Contributing
+
+Contributions welcome! Please open an issue or PR.
+
+## License
+
+MIT
+
+## Support
+
+For issues or questions, open a GitHub issue or reach out on X/Twitter.
+
+---
+
+**Built with React, wagmi, and ❤️ on Base Sepolia**
 ## Troubleshooting
 
 **"Insufficient funds for gas"**
