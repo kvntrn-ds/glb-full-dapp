@@ -1,0 +1,21 @@
+{
+  "name": "solana-nft-minter",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "setup": "node setup-wallet.js",
+    "balance": "node check-balance.js",
+    "upload": "node upload-to-ipfs.js",
+    "mint": "node mint-solana.js"
+  },
+  "dependencies": {
+    "@metaplex-foundation/mpl-token-metadata": "^3.2.0",
+    "@metaplex-foundation/umi": "^0.9.0",
+    "@metaplex-foundation/umi-bundle-defaults": "^0.9.0",
+    "@solana/web3.js": "^1.87.0",
+    "bs58": "^5.0.0",
+    "dotenv": "^16.3.0",
+    "axios": "^1.6.0",
+    "form-data": "^4.0.0"
+  }
+}
